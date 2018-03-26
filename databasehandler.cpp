@@ -49,8 +49,7 @@ std::vector<std::string> DatabaseHandler::listAssets()
         throw QString("Failed to fetch assets.");
     }
 #ifdef QT_DEBUG
-    else
-        qDebug() << "OK.";
+    else qDebug() << "OK.";
 #endif
     //TBD
 }
@@ -65,7 +64,10 @@ bool DatabaseHandler::createdatabase(std::string name)
 #endif
     QJsonDocument reply = post(url, nullptr);
     if(reply.object().value("message").toString() == "New database successfully created")
+    {
+        currentDatabase = name;
         return true;
+    }
     return false;
 }
 
@@ -78,7 +80,10 @@ bool DatabaseHandler::openDatabase(std::string name)
 #endif
     QJsonDocument reply = post(url, nullptr);
     if(reply.object().value("message").toString() == "Database successfully opened")
+    {
+        currentDatabase = name;
         return true;
+    }
     return false;
 }
 
@@ -100,27 +105,35 @@ bool DatabaseHandler::createAsset(Asset asset)
 {
     std::string url = webaddr + "/api/assets";
     QJsonObject object;
-    object.insert("assetId", QJsonValue(asset.assetId));
-    object.insert("assetName", QJsonValue(asset.assetName.c_str()));
-    object.insert("shortCode", QJsonValue(asset.shortCode.c_str()));
-    object.insert("assetDescription", QJsonValue(asset.assetDescription.c_str()));
-    object.insert("assetSig", QJsonValue(asset.assetSig->c_str()));
-    object.insert("assetType", QJsonValue(asset.assetType->c_str()));
-    object.insert("cFlag", QJsonValue(asset.cFlag));
-    object.insert("tags", QJsonValue(asset.tags.c_str()));
+    //object.insert("assetId", QJsonValue(asset.assetId));
+    object.insert("theName", QJsonValue(QString::fromStdString(asset.assetName)));
+    object.insert("theShortCode", QJsonValue(QString::fromStdString(asset.shortCode)));
+    object.insert("theDescription", QJsonValue(QString::fromStdString(asset.assetDescription)));
+    object.insert("theSignificance", QJsonValue(QString::fromStdString(*asset.assetSig)));
+    object.insert("theType", QJsonValue(QString::fromStdString(*asset.assetType)));
+    auto tags = split(asset.tags, ',');
+    QJsonArray tagsArray;
+    foreach(std::string tag, tags)
+        tagsArray.push_back(QJsonValue(QString::fromStdString(tag)));
+    object.insert("theTags", QJsonValue(tagsArray));
+    //dummy additions
+    object.insert("isCritical", QJsonValue(0));
+    object.insert("theCriticalRationale", QJsonValue());
+    object.insert("theInterfaces", QJsonValue(QJsonArray()));
+    object.insert("theEnvironmentProperties", QJsonValue(QJsonArray()));
 #ifdef QT_DEBUG
     qDebug() << "QUERY(POST): Requesting creation of asset " + QString::fromStdString(asset.assetName);
     qDebug() << "POST: " << QString::fromStdString(url);
 #endif
     QJsonDocument reply = post(url, &object);
-    //TBD confirmation
+    //TBD confirm
 }
 
 //Network functions
 QJsonDocument DatabaseHandler::get(const std::string url, const std::vector<Item> *payload)
 {
     QNetworkReply* reply;
-    std::string req = url + "&session_id=" + sessionID;
+    std::string req = "http://" + url + "?session_id=" + sessionID;
     if(payload != nullptr)
         for(auto it = payload->begin(); it != payload->end(); ++it)
             req += "&" + it->key + "=" + it->value;
@@ -131,17 +144,23 @@ QJsonDocument DatabaseHandler::get(const std::string url, const std::vector<Item
 QJsonDocument DatabaseHandler::post(const std::string url, const QJsonObject* payload)
 {
     QNetworkReply* reply;
-    std::string req;
+    QNetworkRequest request;
+    std::string req = "http://" + url;
     QJsonObject container;
     if(payload == nullptr)
-        req = url + "&session_id=" + sessionID;
+    {
+        req += "?session_id=" + sessionID;
+        request = QNetworkRequest(QUrl(QString::fromStdString(req)));
+    }
     else
     {
         container.insert("session_id", QJsonValue(sessionID.c_str()));
         container.insert("object", QJsonValue(*payload));
+        request = QNetworkRequest(QUrl(QString::fromStdString(req)));
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     }
     QJsonDocument doc(container);
-    reply = nam.post(QNetworkRequest(QUrl(QString::fromStdString(url))), doc.toJson());
+    reply = nam.post(request, doc.toJson());
     return replyCap(reply);
 }
 
@@ -149,9 +168,15 @@ QJsonDocument DatabaseHandler::replyCap(QNetworkReply* reply)
 {
     while(!reply->isFinished())
         qApp->processEvents();
-    reply->deleteLater();
+    QByteArray data = reply->readAll();
 #ifdef QT_DEBUG
-    qDebug() << "RESPONCE:" << endl << QString::fromStdString(reply->readAll().toStdString());
+    qDebug() << "RESPONCE:" << endl << QString::fromStdString(data.toStdString());
 #endif
-    return QJsonDocument::fromJson(reply->readAll());
+    reply->deleteLater();
+    return QJsonDocument::fromJson(data);
+}
+
+std::string DatabaseHandler::getCurrentDatabase() const
+{
+    return currentDatabase;
 }

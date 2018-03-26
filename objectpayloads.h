@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+static int nextAssetId=0;
 struct Asset
 {
     int assetId;
@@ -11,7 +12,6 @@ struct Asset
     std::string assetDescription;
     std::string *assetSig;
     std::string *assetType;
-    int cFlag=0;
     std::string tags;
 };
 

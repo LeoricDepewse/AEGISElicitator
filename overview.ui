@@ -51,6 +51,11 @@
         <widget class="QComboBox" name="typeCombo">
          <item>
           <property name="text">
+           <string>&lt;None&gt;</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Asset</string>
           </property>
          </item>
@@ -112,24 +117,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Name:</string>
+        <widget class="QFrame" name="itemFrame">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>273</width>
+           <height>469</height>
+          </size>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="nameEdit"/>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Additional Data: (TBD)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="commitNew">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -137,7 +141,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Add Item(D)</string>
+          <string>Add Item</string>
          </property>
         </widget>
        </item>
@@ -173,7 +177,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>225</width>
+         <width>193</width>
          <height>230</height>
         </rect>
        </property>
@@ -294,12 +298,12 @@
   </widget>
   <action name="actionNew_Database">
    <property name="text">
-    <string>New Database(D)</string>
+    <string>New Database</string>
    </property>
   </action>
   <action name="actionOpen_Database">
    <property name="text">
-    <string>Open Database(D)</string>
+    <string>Open Database</string>
    </property>
   </action>
   <action name="actionCommit_Database">

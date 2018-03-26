@@ -26,14 +26,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         overview.cpp \
     dynamiclinkdialog.cpp \
-    databasehandler.cpp
+    databasehandler.cpp \
+    additionalfunctions.cpp
 
 HEADERS  += overview.h \
     dynamiclinkdialog.h \
     databasehandler.h \
     reqtype.h \
     item.h \
-    objectpayloads.h
+    objectpayloads.h \
+    additionalfunctions.h
 
 FORMS    += overview.ui \
     dynamiclinkdialog.ui

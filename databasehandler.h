@@ -7,6 +7,7 @@
 #include "reqtype.h"
 #include "item.h"
 #include "objectpayloads.h"
+#include "additionalfunctions.h"
 
 class DatabaseHandler
 {
@@ -21,6 +22,8 @@ public:
     bool deleteDatabase(std::string name);
     //Asset
     bool createAsset(Asset asset);
+    std::string getCurrentDatabase() const;
+
 private:
     QJsonDocument request(const REQTYPE method, const std::string url, const QByteArray payload);
     QJsonDocument get(const std::string url, const std::vector<Item>* payload);
@@ -28,6 +31,7 @@ private:
     QJsonDocument replyCap(QNetworkReply *reply);
     std::string webaddr;
     std::string sessionID;
+    std::string currentDatabase;
     QNetworkAccessManager nam;
 };
 
