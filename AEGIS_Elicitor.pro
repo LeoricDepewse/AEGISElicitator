@@ -27,7 +27,10 @@ SOURCES += main.cpp\
         overview.cpp \
     dynamiclinkdialog.cpp \
     databasehandler.cpp \
-    additionalfunctions.cpp
+    additionalfunctions.cpp \
+    dataobject.cpp \
+    integer.cpp \
+    dataform.cpp
 
 HEADERS  += overview.h \
     dynamiclinkdialog.h \
@@ -35,7 +38,10 @@ HEADERS  += overview.h \
     reqtype.h \
     item.h \
     objectpayloads.h \
-    additionalfunctions.h
+    additionalfunctions.h \
+    dataobject.h \
+    integer.h \
+    dataform.h
 
 FORMS    += overview.ui \
     dynamiclinkdialog.ui

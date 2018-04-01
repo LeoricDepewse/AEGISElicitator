@@ -101,33 +101,46 @@ bool DatabaseHandler::deleteDatabase(std::string name)
 }
 
 //ASSET INTERFACE
-bool DatabaseHandler::createAsset(Asset asset)
+int DatabaseHandler::createAsset(QJsonObject asset)
 {
     std::string url = webaddr + "/api/assets";
-    QJsonObject object;
-    //object.insert("assetId", QJsonValue(asset.assetId));
-    object.insert("theName", QJsonValue(QString::fromStdString(asset.assetName)));
-    object.insert("theShortCode", QJsonValue(QString::fromStdString(asset.shortCode)));
-    object.insert("theDescription", QJsonValue(QString::fromStdString(asset.assetDescription)));
-    object.insert("theSignificance", QJsonValue(QString::fromStdString(*asset.assetSig)));
-    object.insert("theType", QJsonValue(QString::fromStdString(*asset.assetType)));
-    auto tags = split(asset.tags, ',');
-    QJsonArray tagsArray;
-    foreach(std::string tag, tags)
-        tagsArray.push_back(QJsonValue(QString::fromStdString(tag)));
-    object.insert("theTags", QJsonValue(tagsArray));
-    //dummy additions
-    object.insert("isCritical", QJsonValue(0));
-    object.insert("theCriticalRationale", QJsonValue());
-    object.insert("theInterfaces", QJsonValue(QJsonArray()));
-    object.insert("theEnvironmentProperties", QJsonValue(QJsonArray()));
 #ifdef QT_DEBUG
-    qDebug() << "QUERY(POST): Requesting creation of asset " + QString::fromStdString(asset.assetName);
+    qDebug() << "QUERY(POST): Requesting creation of asset ";
     qDebug() << "POST: " << QString::fromStdString(url);
 #endif
-    QJsonDocument reply = post(url, &object);
-    //TBD confirm
+    QJsonDocument reply = post(url, &asset);
+    if(reply.object().contains("asset_id"))
+        return reply.object().value("asset_id");
+    else return -1;
 }
+
+//bool DatabaseHandler::createAsset(Asset asset)
+//{
+//    std::string url = webaddr + "/api/assets";
+//    QJsonObject object;
+//    //object.insert("assetId", QJsonValue(asset.assetId));
+//    object.insert("theName", QJsonValue(QString::fromStdString(asset.assetName)));
+//    object.insert("theShortCode", QJsonValue(QString::fromStdString(asset.shortCode)));
+//    object.insert("theDescription", QJsonValue(QString::fromStdString(asset.assetDescription)));
+//    object.insert("theSignificance", QJsonValue(QString::fromStdString(*asset.assetSig)));
+//    object.insert("theType", QJsonValue(QString::fromStdString(*asset.assetType)));
+//    auto tags = split(asset.tags, ',');
+//    QJsonArray tagsArray;
+//    foreach(std::string tag, tags)
+//        tagsArray.push_back(QJsonValue(QString::fromStdString(tag)));
+//    object.insert("theTags", QJsonValue(tagsArray));
+//    //dummy additions
+//    object.insert("isCritical", QJsonValue(0));
+//    object.insert("theCriticalRationale", QJsonValue());
+//    object.insert("theInterfaces", QJsonValue(QJsonArray()));
+//    object.insert("theEnvironmentProperties", QJsonValue(QJsonArray()));
+//#ifdef QT_DEBUG
+//    qDebug() << "QUERY(POST): Requesting creation of asset " + QString::fromStdString(asset.assetName);
+//    qDebug() << "POST: " << QString::fromStdString(url);
+//#endif
+//    QJsonDocument reply = post(url, &object);
+//    //TBD confirm
+//}
 
 //Network functions
 QJsonDocument DatabaseHandler::get(const std::string url, const std::vector<Item> *payload)

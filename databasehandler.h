@@ -21,7 +21,7 @@ public:
     bool openDatabase(std::string name);
     bool deleteDatabase(std::string name);
     //Asset
-    bool createAsset(Asset asset);
+    int createAsset(QJsonObject asset);
     std::string getCurrentDatabase() const;
 
 private:

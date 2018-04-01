@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>715</width>
-    <height>271</height>
+    <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -116,51 +116,6 @@
          </item>
         </widget>
        </item>
-       <item>
-        <widget class="QFrame" name="itemFrame">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>273</width>
-           <height>469</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="commitNew">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Add Item</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </widget>
     </item>
@@ -177,8 +132,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>193</width>
-         <height>230</height>
+         <width>240</width>
+         <height>629</height>
         </rect>
        </property>
       </widget>
@@ -205,7 +160,7 @@
           <enum>QFrame::Raised</enum>
          </property>
          <property name="text">
-          <string>Edit Item:</string>
+          <string>Edit Item</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>

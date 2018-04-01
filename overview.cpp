@@ -9,16 +9,6 @@ Overview::Overview(QWidget *parent) :
 #ifdef QT_DEBUG
     handler = new DatabaseHandler("localhost:7071", "test");
     handler->openDatabase("default");
-    significance.push_back("Very significant");
-    significance.push_back("Significant");
-    significance.push_back("Not very significant");
-    significance.push_back("Minor significance");
-    significance.push_back("Insignificant");
-    assetType.push_back("Information");
-    assetType.push_back("Systems");
-    assetType.push_back("Software");
-    assetType.push_back("Hardware");
-    assetType.push_back("People");
 #else
     //establish connection
     bool connected = false;
@@ -31,14 +21,17 @@ Overview::Overview(QWidget *parent) :
     }
 #endif
     ui->setupUi(this);
-    ui->itemFrame->setLayout(new QVBoxLayout);
-    ui->itemFrame->layout()->setObjectName("creationLayout");
+    createForm = new DataForm();
+    ui->verticalFrame->layout()->addWidget(createForm);
+    ui->verticalFrame->layout()->addItem(new QSpacerItem(40, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
+    connect(createForm, SIGNAL(on_submit(QJsonObject)), this, SLOT(createObject(QJsonObject)));
 }
 
 Overview::~Overview()
 {
     delete ui;
     delete handler;
+    delete createForm;
 }
 
 void Overview::on_actionDynamic_Linker_triggered()
@@ -92,66 +85,80 @@ void Overview::on_actionOpen_Database_triggered()
 
 void Overview::on_typeCombo_currentIndexChanged(const QString &arg1)
 {
-    //change creation context
-    QLayoutItem *child;
-    while ((child = ui->itemFrame->layout()->takeAt(0)) != 0)
-    {
-        delete child->widget();
-        delete child;
-    }
-    formcache.clear();
-    ui->itemFrame->layout()->addWidget(new QLabel("Name:"));
-    QLineEdit* lineedit = new QLineEdit(); lineedit->setObjectName("name");
-    ui->itemFrame->layout()->addWidget(lineedit); formcache.push_back(lineedit);
     if(arg1 == "Asset")
-    {
-        ui->itemFrame->layout()->addWidget(new QLabel("Short Code:"));
-        lineedit = new QLineEdit(); lineedit->setObjectName("shortCode");
-        ui->itemFrame->layout()->addWidget(lineedit); formcache.push_back(lineedit);
-        ui->itemFrame->layout()->addWidget(new QLabel("Description:"));
-        QPlainTextEdit* block = new QPlainTextEdit(); block->setObjectName("assetDescription");
-        ui->itemFrame->layout()->addWidget(block); formcache.push_back(block);
-        ui->itemFrame->layout()->addWidget(new QLabel("significance:"));
-        QComboBox* combo = new QComboBox(); combo->setObjectName("assetSig");
-        foreach(std::string sig, significance)
-            combo->addItem(QString::fromStdString(sig));
-        ui->itemFrame->layout()->addWidget(combo); formcache.push_back(combo);
-        ui->itemFrame->layout()->addWidget(new QLabel("asset Type:"));
-        combo = new QComboBox(); combo->setObjectName("assetType");
-        foreach(std::string type, assetType)
-            combo->addItem(QString::fromStdString(type));
-        ui->itemFrame->layout()->addWidget(combo); formcache.push_back(combo);
-        ui->itemFrame->layout()->addWidget(new QLabel("tags:"));
-        lineedit = new QLineEdit(); lineedit->setObjectName("tags");
-        ui->itemFrame->layout()->addWidget(lineedit); formcache.push_back(lineedit);
-    }
-    else//none
-        while ((child = ui->itemFrame->layout()->takeAt(0)) != 0)
-        {
-            delete child->widget();
-            delete child;
-        }
+        createForm->setDataModel(new DataObject(-1, ASSET, ASSET_C));
+    else
+        createForm->setDataModel(nullptr);
 }
 
-void Overview::on_commitNew_clicked()
+void Overview::createObject(QJsonObject object)
 {
-    //creation package
     if(ui->typeCombo->currentText() == "Asset")
-    {
-        Asset asset;
-        asset.assetId = nextAssetId;
-        asset.assetName = ((QLineEdit*)formcache[0])->text().toStdString();
-        asset.shortCode = ((QLineEdit*)formcache[1])->text().toStdString();
-        asset.assetDescription = ((QPlainTextEdit*)formcache[2])->toPlainText().toStdString();
-        asset.assetSig = &(significance[((QComboBox*)formcache[3])->currentIndex()]);
-        asset.assetType = &(assetType[((QComboBox*)formcache[4])->currentIndex()]);
-        asset.tags = ((QLineEdit*)formcache[5])->text().toStdString();
-#ifdef QT_DEBUG
-        qDebug() << QString::fromStdString(asset.assetId + ", " + asset.assetName + ", " + asset.shortCode+ ", "
-                                           + asset.assetDescription + ", " + *asset.assetSig + ", "
-                                           + *asset.assetType + ", " + asset.tags);
-#endif
-        if(handler->createAsset(asset))
-            return;//confirm message
-    }
+        handler->createAsset(object);
 }
+
+//void Overview::on_typeCombo_currentIndexChanged(const QString &arg1)
+//{
+//    //change creation context
+//    QLayoutItem *child;
+//    while ((child = ui->itemFrame->layout()->takeAt(0)) != 0)
+//    {
+//        delete child->widget();
+//        delete child;
+//    }
+//    formcache.clear();
+//    ui->itemFrame->layout()->addWidget(new QLabel("Name:"));
+//    QLineEdit* lineedit = new QLineEdit(); lineedit->setObjectName("name");
+//    ui->itemFrame->layout()->addWidget(lineedit); formcache.push_back(lineedit);
+//    if(arg1 == "Asset")
+//    {
+//        ui->itemFrame->layout()->addWidget(new QLabel("Short Code:"));
+//        lineedit = new QLineEdit(); lineedit->setObjectName("shortCode");
+//        ui->itemFrame->layout()->addWidget(lineedit); formcache.push_back(lineedit);
+//        ui->itemFrame->layout()->addWidget(new QLabel("Description:"));
+//        QPlainTextEdit* block = new QPlainTextEdit(); block->setObjectName("assetDescription");
+//        ui->itemFrame->layout()->addWidget(block); formcache.push_back(block);
+//        ui->itemFrame->layout()->addWidget(new QLabel("significance:"));
+//        QComboBox* combo = new QComboBox(); combo->setObjectName("assetSig");
+//        foreach(std::string sig, SIGNIFICANCE)
+//            combo->addItem(QString::fromStdString(sig));
+//        ui->itemFrame->layout()->addWidget(combo); formcache.push_back(combo);
+//        ui->itemFrame->layout()->addWidget(new QLabel("asset Type:"));
+//        combo = new QComboBox(); combo->setObjectName("assetType");
+//        foreach(std::string type, gAssetType)
+//            combo->addItem(QString::fromStdString(type));
+//        ui->itemFrame->layout()->addWidget(combo); formcache.push_back(combo);
+//        ui->itemFrame->layout()->addWidget(new QLabel("tags:"));
+//        lineedit = new QLineEdit(); lineedit->setObjectName("tags");
+//        ui->itemFrame->layout()->addWidget(lineedit); formcache.push_back(lineedit);
+//    }
+//    else//none
+//        while ((child = ui->itemFrame->layout()->takeAt(0)) != 0)
+//        {
+//            delete child->widget();
+//            delete child;
+//        }
+//}
+
+//void Overview::on_commitNew_clicked()
+//{
+//    //creation package
+//    if(ui->typeCombo->currentText() == "Asset")
+//    {
+//        Asset asset;
+//        asset.assetId = nextAssetId;
+//        asset.assetName = ((QLineEdit*)formcache[0])->text().toStdString();
+//        asset.shortCode = ((QLineEdit*)formcache[1])->text().toStdString();
+//        asset.assetDescription = ((QPlainTextEdit*)formcache[2])->toPlainText().toStdString();
+//        //asset.assetSig = &(SIGNIFICANCE[((QComboBox*)formcache[3])->currentIndex()]);
+//        asset.assetType = &(gAssetType[((QComboBox*)formcache[4])->currentIndex()]);
+//        asset.tags = ((QLineEdit*)formcache[5])->text().toStdString();
+//#ifdef QT_DEBUG
+//        qDebug() << QString::fromStdString(asset.assetId + ", " + asset.assetName + ", " + asset.shortCode+ ", "
+//                                           + asset.assetDescription + ", " + *asset.assetSig + ", "
+//                                           + *asset.assetType + ", " + asset.tags);
+//#endif
+//        if(handler->createAsset(asset))
+//            return;//confirm message
+//    }
+//}

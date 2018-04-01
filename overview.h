@@ -6,7 +6,9 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPlainTextEdit>
+#include <QSpacerItem>
 #include "databasehandler.h"
+#include "dataform.h"
 
 namespace Ui {
 class Overview;
@@ -29,14 +31,15 @@ private slots:
 
     void on_typeCombo_currentIndexChanged(const QString &arg1);
 
-    void on_commitNew_clicked();
+    void createObject(QJsonObject object);
 
 private:
     Ui::Overview *ui;
     DatabaseHandler* handler;
     QStringList databases;
     bool dbsListed = false;
-    std::vector<QObject*> formcache;
+    DataForm* createForm;
+//    std::vector<QObject*> formcache;
 };
 
 #endif // OVERVIEW_H
