@@ -12,27 +12,29 @@
 class DatabaseHandler
 {
 public:
-    DatabaseHandler(std::string addr, std::string sessionID);
+    DatabaseHandler(std::string addr, std::string _sessionID);
     //Listings
     std::vector<std::string> listDatabases();
     std::vector<std::string> listAssets();
+    std::string getCurrentDatabase() const;
     //Database
     bool createdatabase(std::string name);
     bool openDatabase(std::string name);
     bool deleteDatabase(std::string name);
     //Asset
     int createAsset(QJsonObject asset);
-    std::string getCurrentDatabase() const;
+    std::vector<DataObject> getAssets();
 
 private:
     QJsonDocument request(const REQTYPE method, const std::string url, const QByteArray payload);
     QJsonDocument get(const std::string url, const std::vector<Item>* payload);
     QJsonDocument post(const std::string url, const QJsonObject *payload);
     QJsonDocument replyCap(QNetworkReply *reply);
-    std::string webaddr;
-    std::string sessionID;
-    std::string currentDatabase;
-    QNetworkAccessManager nam;
+    std::vector<DataObject> _assets; bool _assetSync = false;
+    std::string _webaddr;
+    std::string _sessionID;
+    std::string _currentDatabase;
+    QNetworkAccessManager _nam;
 };
 
 #endif // DATABASEHANDLER_H

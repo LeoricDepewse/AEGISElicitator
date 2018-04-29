@@ -1,6 +1,7 @@
 #ifndef ITEM_H
 #define ITEM_H
 #include <string>
+#include <vector>
 
 enum DataType
 {

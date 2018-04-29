@@ -23,9 +23,9 @@ static const DataProp ASSET[] = {
     {"Name", "theName", text},
     {"Short Code", "theShortCode", text},
     {"Description", "theDescription", largeText},
-    {"Significance", "theSignificance", combo, false, new Integer(T_SIGNIFICANCE)},
+    {"Significance", "theSignificance", text},
     {"Asset Type", "theType", combo, false, new Integer(T_ASSETTYPE)},
-    {"Tags", "theTags", array},
+    {"Tags", "theTags", array, true},
     {"", "isCritical", number, true, new Integer(0)},
     {"", "theCriticalRationale", nType, true},
     {"", "theInterfaces", array, true},
@@ -33,8 +33,6 @@ static const DataProp ASSET[] = {
 };
 static const int ASSET_C = (sizeof(ASSET)/sizeof(ASSET[0]));
 
-//OBSOLETE: DELETE AFTER CODE UPDATED
-static int nextAssetId=0;
 struct Asset
 {
     int assetId;

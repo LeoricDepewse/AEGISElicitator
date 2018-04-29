@@ -1,6 +1,7 @@
 #ifndef DATAFORM_H
 #define DATAFORM_H
 #include <QtCore/QDebug>
+#include <additionalfunctions.h>
 #include <typeinfo>
 #include <QLabel>
 #include <QFrame>

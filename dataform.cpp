@@ -104,23 +104,30 @@ void DataForm::submit()
         switch((*_dataModel)[i].type)
         {
         case text:
-            (*_dataModel)[i].data = new std::string(((QLineEdit)_formFields[i]).text().toStdString());
+            (*_dataModel)[i].data = new std::string(((QLineEdit*)_formFields[i])->text().toStdString());
             break;
         case largeText:
-            (*_dataModel)[i].data = new std::string(((QPlainTextEdit)_formFields[i]).toPlainText().toStdString());
+            (*_dataModel)[i].data = new std::string(((QPlainTextEdit*)_formFields[i])->toPlainText().toStdString());
             break;
         case number:
-            (*_dataModel)[i].data = new Integer(((QSpinBox)_formFields[i]).value());
+            (*_dataModel)[i].data = new Integer(((QSpinBox*)_formFields[i])->value());
             break;
         case array:
             //TODO
+            {
+                std::string tagString = ((QLineEdit*)_formFields[i])->text().toStdString();
+                std::vector<std::string> tags = split(tagString, ',');
+                (*_dataModel)[i].data = new DataProp[tags.size()];
+                std::vector<DataProp>* arr = new std::vector<DataProp>();
+                for(int j = 0; j < tags.size(); ++j)
+                {
+                    trim(tags[j]);
+                    arr->push_back({"", "", text, false, new std::string(tags[j])});
+                }
+                (*_dataModel)[i].data = arr;
+            }
             break;
         case combo:
-//            {
-//                ComboChoice* choice = (ComboChoice*)((*_dataModel)[i].data);
-//                QComboBox* combox = (QComboBox*)(_formFields[i]);
-//                choice->index =
-//            }
             ((ComboChoice*)(*_dataModel)[i].data)->index = ((QComboBox*)_formFields[i])->currentIndex();
         case object:
         case nType:
