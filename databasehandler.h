@@ -23,7 +23,7 @@ public:
     bool deleteDatabase(std::string name);
     //Asset
     int createAsset(QJsonObject asset);
-    std::vector<DataObject> getAssets();
+    std::vector<DataObject>* getAssets();
 
 private:
     QJsonDocument request(const REQTYPE method, const std::string url, const QByteArray payload);

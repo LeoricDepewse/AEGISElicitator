@@ -24,7 +24,7 @@ public:
     void setDataModel(DataObject *dataModel);
 
 private:
-    DataObject* _dataModel;
+    DataObject* _dataModel = nullptr;
     std::vector<QWidget*> _formFields;
     QPushButton* _submitButton;
 signals:

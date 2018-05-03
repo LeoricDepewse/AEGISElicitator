@@ -37,7 +37,7 @@ std::vector<std::string> DatabaseHandler::listDatabases()
 
 std::vector<std::string> DatabaseHandler::listAssets()
 {
-    std::vector<DataObject> assets = this->getAssets();
+    std::vector<DataObject> assets = *(this->getAssets());
     std::vector<std::string> names;
     foreach(DataObject asset, assets)
         names.push_back(*(std::string*)(asset[0].data));
@@ -129,7 +129,7 @@ int DatabaseHandler::createAsset(QJsonObject asset)
     else return -1;
 }
 
-std::vector<DataObject> DatabaseHandler::getAssets()
+std::vector<DataObject> *DatabaseHandler::getAssets()
 {
     if(!_assetSync)
     {
@@ -184,23 +184,23 @@ std::vector<DataObject> DatabaseHandler::getAssets()
                     if(!jsonObject.value(QString::fromStdString(asset[j].name)).isString()) throw QString("DataType mismatch!");
                     {
                         std::string value = jsonObject.value(QString::fromStdString(asset[j].name)).toString().toStdString();
-                        ComboChoice* choice = new ComboChoice;
-                        switch(*(Integer*)asset[j].data)
-                        {
-                        case T_SIGNIFICANCE:
-                            choice->choices = &SIGNIFICANCE;
-                            break;
-                        case T_ASSETTYPE:
-                            choice->choices = &gAssetType;
-                            break;
-                        default:
-                            throw "Invalid choices configuration";
-                        }
+                        ComboChoice* choice = (ComboChoice*)asset[j].data;
+//                        switch(*(Integer*)asset[j].data)
+//                        {
+//                        case T_SIGNIFICANCE:
+//                            choice->choices = &SIGNIFICANCE;
+//                            break;
+//                        case T_ASSETTYPE:
+//                            choice->choices = &gAssetType;
+//                            break;
+//                        default:
+//                            throw "Invalid choices configuration";
+//                        }
                         choice->index = -1;
                         for(uint i = 0; i < choice->choices->size(); ++i)
                             if(value.compare(choice->choices->at(i)) == 0) {choice->index = i; break;}
                         if(choice->index == -1) throw "invalid combo choice!";
-                        asset[j].data = choice;
+//                        asset[j].data = choice;
                     }
                     break;
                 case object:
@@ -213,7 +213,7 @@ std::vector<DataObject> DatabaseHandler::getAssets()
         }
         _assetSync = true;
     }
-    return _assets;
+    return &_assets;
 }
 
 //Network functions

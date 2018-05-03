@@ -120,23 +120,87 @@
      </widget>
     </item>
     <item>
-     <widget class="QScrollArea" name="svgPortal">
+     <widget class="QFrame" name="listArea">
       <property name="frameShape">
-       <enum>QFrame::WinPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QWidget" name="svgArea">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>240</width>
-         <height>629</height>
-        </rect>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QComboBox" name="listCombo">
+         <item>
+          <property name="text">
+           <string>&lt;None&gt;</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Asset</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Countermeasure</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Countermeasure_Target</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Risk</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Role</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Requirement</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Responce</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Task</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Task_Impact</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Task_Participant</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Threat</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Vulnerability</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="objectList"/>
+       </item>
+      </layout>
      </widget>
     </item>
     <item>
@@ -166,59 +230,6 @@
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Name:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="editNameEdit"/>
-       </item>
-       <item>
-        <widget class="QLabel" name="edit_Type_label">
-         <property name="text">
-          <string>Type: &lt;&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QFrame" name="edit_Props">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_2">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Commit Change(D)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

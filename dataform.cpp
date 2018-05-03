@@ -50,9 +50,13 @@ void DataForm::setDataModel(DataObject *dataModel)
             {
             case text:
                 widget = new QLineEdit(this);
+                if((*_dataModel)[i].data != nullptr)
+                    ((QLineEdit*)widget)->setText(QString::fromStdString(*(std::string*)(*_dataModel)[i].data));
                 break;
             case largeText:
                 widget = new QPlainTextEdit(this);
+                if((*_dataModel)[i].data != nullptr)
+                    ((QPlainTextEdit*)widget)->setPlainText(QString::fromStdString(*(std::string*)(*_dataModel)[i].data));
                 break;
             case number:
                 widget = new QSpinBox(this);

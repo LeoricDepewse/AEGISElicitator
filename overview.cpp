@@ -25,6 +25,9 @@ Overview::Overview(QWidget *parent) :
     ui->verticalFrame->layout()->addWidget(createForm);
     ui->verticalFrame->layout()->addItem(new QSpacerItem(40, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
     connect(createForm, SIGNAL(on_submit(QJsonObject)), this, SLOT(createObject(QJsonObject)));
+    editForm = new DataForm();
+    ui->verticalFrame_2->layout()->addWidget(editForm);
+    ui->verticalFrame_2->layout()->addItem(new QSpacerItem(40, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 
 Overview::~Overview()
@@ -94,7 +97,11 @@ void Overview::on_typeCombo_currentIndexChanged(const QString &arg1)
 void Overview::createObject(QJsonObject object)
 {
     if(ui->typeCombo->currentText() == "Asset")
+    {
         handler->createAsset(object);
+        if(ui->listCombo->currentText() == "Asset")
+            this->on_listCombo_currentIndexChanged("Asset");
+    }
 }
 
 //void Overview::on_typeCombo_currentIndexChanged(const QString &arg1)
@@ -162,3 +169,41 @@ void Overview::createObject(QJsonObject object)
 //            return;//confirm message
 //    }
 //}
+
+void Overview::on_listCombo_currentIndexChanged(const QString &arg1)
+{
+    ui->objectList->clear();
+    if(arg1 == "Asset")
+    {
+        auto assets = handler->getAssets();
+        for(auto it = assets->begin(); it != assets->end(); ++it)
+            for(int i = 0; i < (*it).size(); ++i)
+            {
+                if((*it)[i].name == "theName")
+                {
+                    ui->objectList->addItem(QString::fromStdString(*(std::string*)(*it)[i].data));
+                    break;
+                }
+            }
+    }
+}
+
+void Overview::on_objectList_currentTextChanged(const QString &currentText)
+{
+    qDebug() << "Selecting: "+currentText;
+    if(ui->listCombo->currentText() == "Asset")
+    {
+        auto assets = handler->getAssets();
+        for(auto it = assets->begin(); it != assets->end(); ++it)
+            for(int i = 0; i < (*it).size(); ++i)
+                if((*it)[i].name == "theName")
+                {
+                    if(*(std::string*)((*it)[i].data) == currentText.toStdString())
+                    {
+                        editForm->setDataModel(&(*it));
+                        return;
+                    }
+                    break;
+                }
+    }
+}

@@ -33,12 +33,16 @@ private slots:
 
     void createObject(QJsonObject object);
 
+    void on_listCombo_currentIndexChanged(const QString &arg1);
+
+    void on_objectList_currentTextChanged(const QString &currentText);
+
 private:
     Ui::Overview *ui;
     DatabaseHandler* handler;
     QStringList databases;
     bool dbsListed = false;
-    DataForm* createForm;
+    DataForm *createForm, *editForm;
 //    std::vector<QObject*> formcache;
 };
 
